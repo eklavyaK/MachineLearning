@@ -1,0 +1,129 @@
+In case of sequential architecture, it is a plain stack of layers where each layer has exactly one input tensor and one output tensor.
+
+Every node in a neural network layer has input and output,
+in case of sequential layer the input is one tensor which is from previous layer suppose it is a[i - 1], the output tensor is calculated as:
+a[i] = w * a[i - 1] + b, where w and b are the weight and bias associated with that node.
+
+You might be wondering how do different layers have different number of neurons. 
+Assume a dense sequential neural network with 3 layers, where first layer has 10 nodes and second layers has 20 nodes and third layer has 1 node.
+Actually, connections between the nodes form a weight graph and the output is calculated as follows
+1. first layer will produce 10 outputs as [h0, h1, h2, ..., h9], now this vector will act as input for second layerr, each of these output will go to each of the next node in next layer through a connection (edge), this edge has a weight
+2. this weight will get multiplied with the output and sum of all the products of the edges ending at a node will be computed
+3. after adding bias, this becomes the output of this current node
+
+Binary cross-entropy loss:
+It is same as logistic loss which is used to classify 2 classes
+L(w, b) = - y[i] * log(f[x[i]]) - (1 - y[i]) * log(1 - f[x[i]])
+
+
+ReLU activation:
+y = max(0, y)
+Ability of ReLU's non-linear behavior provides the needed ability to turn functions off until they are needed is the reason it is highly preferred function, to create complex non linear functions by joinining line segments.
+more details:
+https://www.coursera.org/learn/advanced-learning-algorithms/ungradedLab/9QvUK/relu-activation/lab?path=%2Fnotebooks%2FC2_W2_Relu.ipynb
+
+
+Multiclass classification or Softmax regression:
+In this case we're trying to assign the input to a already known classes.
+P(y = k | x) represents the probability of the input belonging to class k, given input x
+probabilities are calculated as follows at the output layer while for rest of the layers the calculation remains the same as normal logistic regression
+for the z1, z2, z3 .. zn given as input to the output layer then the probabilities are calculated as follows:
+P(y = 1 | x) = e ^ z1 / (e ^ z1 + e ^ z2 .... + e ^ zn)
+P(y = 2 | x) = e ^ z2 / (e ^ z1 + e ^ z2 .... + e ^ zn)
+.
+.
+.
+P(y = n | x) = e ^ zn / (e ^ z1 + e ^ z2 .... + e ^ zn)
+
+
+Loss functions associated with softmax regression:
+
+Categorical cross-entropy loss:
+L(y, y_pred) = -sum(y[i] * log(y_pred[i]))
+In this case the true value (y) for a output is a vector containing 1 at the position of true class and 0 otherwise (This method is called one-hot encoding). y_pred is the predicted vector of same dimensions containing the predicted probabilities of a class for the given input.
+It is used in case where number of classes are less. Because most of the multiplication here bears 0 as answer.
+
+Sparse cross-entropy loss:
+L(y, y_pred) = -log(y_pred[y])
+In this case each class are assigned a index as integer. The true output is just an integer y which is the index of the true class. y_pred is a vector of containing the probabilities of all the classes at their respective index. It is used when number of classes are large.
+
+Note: Both caterogical cross-entropy loss and sparse cross-entropy loss produce same results in practical scenarios.
+
+
+For better implementation of loss function, we use (from_logits = True) with linear activation of last layer rather softmax activation.
+What it does is rather than calculating all the terms in a expression of loss function as a separate floating point number, it first simplifies the expression to make the number of floating point operation to be done in a expression to be lesser to minimize the error.
+Reasons:
+Numerical Stability: Softmax activation involves exponentiation of the logits, which can lead to numerical instability when dealing with large numbers. By using the from_logits=True option, TensorFlow performs a numerically stable version of softmax internally. It applies a softmax function to the logits in a stable way, preventing issues like overflow or underflow.
+Flexibility: When working with raw logits, you have more flexibility. The model can output unbounded values, and you can interpret these values as logits before applying the softmax function during the computation of the loss. This can be useful in certain scenarios, such as when the output of the model has not been normalized or when you want to apply a custom activation function.
+for ex:-
+if expression is (1 - 1 / x) + (1 + 1 / x), it'll always bear the answer as 2, but calculating the values of each term separately will cause floating point error due to division of 1 by x in each term as number of decimal places a computer can compute is finite, and this error will escalate when the terms are added.
+
+During backpropagation the derivatives calculated using chain rule. It is done by propagating the values of the derivatives of the next layer to the previous layer.
+
+
+Different DataSets:
+
+Training set:
+Model is trained to fit this data. The model learns the patterns associated with this data and adjusts it's weight during traininig based on this.
+
+Validation set:
+This dataset is used to fine tune the model's hyperparameters (like learning rate, regularization parameter lambda). This indirectly affects the model's weights. For ex, if model is performing well on training set but poorly on testing set, then lambda is increased. Back propagation is not performed while evaluating the model on this dataset. Just the hyperparameters are changed for future epochs.
+
+Test set:
+The the model is just checked for accuracy on this dataset, neither hyperparameters or nor weights are changed through this dataset.
+
+Training and validation datasets, are used to form the model and test data is used to evaluate it.
+
+size of these datasets is:
+training > validation > test
+
+
+Bias refers to the error introduced by approximating a real-world problem, which may be complex, by a simplified model.
+Variance is the error introduced by having a model that is too complex, capturing noise in the training data as if it were a real pattern.
+
+
+As the size of dataset increases training loss increases. Because it is easy to fit mode to a smaller set than a larger set.
+As the size of dataset increases validation loss decreases because, large dataset helps to generalize the model more than smaller set.
+Diogonistics:
+In machine learning, diagnostic refers to the process of assessing and analyzing the performance and behavior of a machine learning model. The goal is to gain insights into how well the model is working, identify potential issues or shortcomings, and guide improvements or adjustments. 
+
+If model's performance on training set is much better than validation set, it indicates high variance.
+If model's performance on training set is much less than expected performance (also called baseline level of performance), it indicates high bias
+
+
+Transfer learning:
+It is basically initilizing the parameters of a model trained on large dataset (like millions of examples, for exampele: imagenet dataset by google). Now if you again train your model on a smaller dataset by initilizing your model using the parameters of a model trained on large dataset of same type, it is more likely that your model will converge faster. Because weights will need only less change to do a specific task.
+for ex: you want to do multiclass classification of 100 animal types, now if you have the parameters of larger model which is trained on larger dataset which contains images of 10000 classes of animals, your model will converge faster to perform specific task of 100 classes.
+Pre-training:
+A model is trained on a large dataset for a specific task, often referred to as the source task. This pre-trained model learns to extract useful features and representations from the data.
+Transfer:
+The pre-trained model, or parts of it, is used as the starting point for a new model designed for a different task, known as the target task. The idea is to transfer the learned knowledge (features, weights, etc.) from the source task to the target task.
+Fine-tuning:
+The model is further trained on the target task using a smaller dataset specific to the new task. This fine-tuning step allows the model to adapt and specialize its learned features to the nuances of the target task.
+
+
+Data augmentation:
+Generating synthetic data by manually modifying the existing data. For ex, introducing distortions, noise etc in the data
+
+
+Skewed datasets:
+Also known as imbalanced dataset, is a type of dataset where the distribution of classes is not equal or balanced. In other words, one or more classes in the dataset have significantly fewer instances compared to others. This imbalance in class distribution can pose challenges for machine learning models, as they may become biased toward the majority class and perform poorly on minority classes.
+for ex: dataset of lab test of general population having rabies or not
+
+True Positive: Sample is positive and model predicted it as positive
+True negative: Sample is negative and model predicted it as negative
+False Positive: Sample is negative and model predicted it as positive
+False Negetive: Sample is positive and model predicted it as Negetive
+
+Precision:
+True positives / Predicted positives = True positives / (True positives + False positives)
+
+Recall:
+True positives / Actual positives = True positives / (True positives + False negatives)
+
+By raising the threshold of logistic regression (ex: 0.9), precision will increase but recall will decrease.
+By decreasing the threshold (ex: 0.2), precision will decrease but recall will increase.
+
+F1 score (harmonic mean of precision and recall) is a metric which is used to calculate the trade-off between precision:
+F1 score = 1 / (0. 5 * (1 / P + 1 / R)) = 2 * P * R / (P + R), where P is precision and R is recall
+A pair of P and R which has highest F1 score is considered best.

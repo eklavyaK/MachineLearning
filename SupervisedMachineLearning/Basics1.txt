@@ -1,0 +1,67 @@
+Feature Scaling:
+It is process of scaling the feature between 0 and 1. This is done to make model converge faster. If the range of values in input is large like, for house price prediction, the area is large compared to number of floors, which leads to more number of iterations required to make model converge.
+
+1. Mean normalization:
+x' = (x - mean) / (max - min)
+
+2. Max - min normalization
+x' = (x - mean) / (max - min)
+
+3. z - score normalization
+x' = (x - mean) / (standard deviation)
+
+
+Feature Engineering:
+It is process of creating a new RELEVANT feature by combination of some inherent features. This helps to get the model converge quickly.
+For example, we have length and breadth of a house, using which we can create area as another and thereby we can create new weight variable which will handle that feature.
+
+
+Logistic Regression is done by getting sigmoid of the predicted values and applying a threshold to obtain the predicted class
+
+Decision boundary in logistic regression is the curve which equates to zero, i.e. one side of it gives value in sigmoid less than 0.5, whereas other side gives the sigmoid value greater than 0.5
+
+Loss function in case of Logistic Regression:
+if f[x[i]] = 1 / (1 + e ^(-y[i]))
+L(w, b) = {-log(f[x[i]]), if y[i] = 1
+		{-log(1 - f[x[i]]), if y[i] = 0
+simplified loss function
+L(w, b) = - y[i] * log(f[x[i]]) - (1 - y[i]) * log(1 - f[x[i]])
+cost function
+L(w, b) = 1 / m (- y[i] * log(f[x[i]]) - (1 - y[i]) * log(1 - f[x[i]]))
+
+Logistic gradient descent:
+It turns out that differentiating the Loss function of logistic regression gives the same result as loss function of linear regression for MSE,
+It comes as d L(wj, b) / dwj = 1 / m * sum((y_pred[i] - y[i]) * x[j])
+for bias b, d L(wj, b) / dwj = 1 / m * sum(y_pred[i] - y[i])
+
+High Variance (Overfitting):
+Explanation: Overfitting occurs when a model learns not only the underlying patterns in the training data but also captures the noise or random fluctuations present in that data. As a result, the model performs well on the training data but fails to generalize to new, unseen data.
+Analogy: High variance is analogous to being too flexible or complex. The model is so flexible that it fits the training data extremely well, but it loses its ability to generalize to new data because it has essentially memorized the noise in the training set.
+
+High Bias (Underfitting):
+Explanation: Underfitting occurs when a model is too simplistic and fails to capture the underlying patterns in the training data. It usually results in poor performance on both the training data and new, unseen data.
+Analogy: High bias is analogous to being too rigid or simple. The model is not able to capture the complexity of the underlying patterns in the data, leading to a poor fit even on the training set.
+
+Generalization:
+Generalization in the context of machine learning refers to the ability of a trained model to perform well on new, unseen data that it hasn't encountered during the training phase.
+
+Ways to address overfitting:
+1. Have a large dataset
+2. Select only the relevant features
+3. Keep the coefficients of the features which have higher degrees small (Regularization) and keep the bias value large
+
+Regularized linear regression:
+L(wj, b) = 1 / (2 * m) * sum((y_pred[i] - y[i]) ^ 2) + lambda / (2 * m) * sum(wj ^ 2)
+Here lambda is regularization parameter, if lambda is small there is high chance model will overfit, if it is large, it'll underfit, so we keep lambda to optimum
+
+updating weights using regularized linear regression:
+wj = wj - lr * [1 / m * sum((y_pred[i] - y[i]) * x[j]) + lambda / m * wj]
+   = wj * (1 - lambda * lr / m) - lr * [1 / m * sum((y_pred[i] - y[i]) * x[j])]
+   Note that wj is being minimized, at each iteration depending on the value of lambda
+
+
+Regularized logistic regression:
+L(wj, b) = [1 / m * sum(- y[i] * log(f[x[i]]) - (1 - y[i]) * log(1 - f[x[i]]))] + [1 / (2 * m) * sum(wj ^ 2)]
+gradient descent:
+wj = wj - lr * [1 / m * sum((y_pred[i] - y[i]) * x[j]) + lambda / m * wj]
+   = wj * (1 - lambda * lr / m) - lr * [1 / m * sum((y_pred[i] - y[i]) * x[j])]

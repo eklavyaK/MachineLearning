@@ -1,0 +1,66 @@
+Decision Trees:
+Decision trees are a popular machine learning algorithm used for both classification and regression tasks. They are versatile, easy to understand, and can handle both numerical and categorical data. Decision trees work by recursively partitioning the dataset into subsets based on the values of input features. The goal is to create a tree-like structure where each node represents a decision based on a feature, leading to a final prediction or outcome at the leaf nodes.
+
+Entropy is a measure of impurity. Entropy increases as the difference in ratio of various elements in a system decreases.
+
+Calculation of entropy:
+H(p1) = -p1 * log_2(p1) - (1 - p1) * log_2(1 - p1)
+Here p1 is the fraction of the target item in a set
+0 * log (0) is considered as 0.
+
+Decision 1:
+How to choose what feature to split on at each node?
+It is done by minimizing purity after the split. If a split is such that fraction of one type of data is getting maximized in one set and minimized in other then split is good because entropy is minimal.
+
+Decision 2:
+When to stop splitting?
+When a node is 100 % one class. When splitting a node will result in the tree exceeding a maximum depth. By keeping the tree at smaller height, it is less prone to overfitting. When improvements in purity score are below a threshold. When number of examples in a node is below a threshold.
+
+
+We take weighted average of the impurities in left subranch and right subranch to to get the estimated entropy of the split.
+The average is taken as
+Av(Entropy) = (Items in left node / Total items) * H(left node) + (Items in right node / Total items) * H(right node)
+
+Information gain in a split = (Entropy without split) - Av(Entropy after split)
+Entropy without split = H(p1), p1 is fraction of target item in raw set
+
+
+Decision Tree learning process:
+-> Start with all examples at the root node
+-> Calculate information gain for all possible features, and pick the one with the highest information gain
+-> Split dataset according to selected feature, and create left and right branches of the tree
+-> keep repeating splitting process recursively for left and right nodes until stopping criteria is met
+
+So, it can be easily seen that building a decision tree using a data is basically building a model by training on that data and we can use that decision tree to predict some output.
+
+For a input we do one hot encoding for every feature. If feature is present it'll be marked as one otherwise 0.
+
+
+For continous variables, we split based on a threshold, greater than the threshold goes into one node and less than that goes into another. Decision is again made based on entropy value of split.
+
+
+Rather than building one tree for prediction we build a ensemble of trees also called Random Forest. While predicting the output we predict the output from all the trees and take the maximum vote type to decide the final value. This helps to reduct the bias towards a particular type of tree.
+
+Sampling with replacement Algorithm:
+It is a way of creating multiple datasets from a dataset, where each new created dataset are mostly made of same size as the original one. 
+For creating a new dataset, we take a data item from the original dataset randomly and add it to the dataset, now repeat this step (size of the original) dataset times. Now we have a new dataset. Note that this new dataset can contain same data item multiple times.
+
+Procedures to create a Random forest:
+We do sampling with replacement multiple times to create n new datasets.
+Now for these n new datasets, we create a new decision tree.
+
+While choosing the feature to split at each node we don't just judge based on the information gain values of all the features, rather we randomly take a subset of size k from the remaining features (k is generally equal to sqroot(n)). Now we apply maximum information technique on this subset to choose one feature. This random selection of the feature further helps to make all the trees distinct from each other.
+
+Now the set of n trees is called random forest.
+
+
+XGBoost (eXtreme Gradient Boosting):
+This technique is super efficient way to create an random forest.
+In this case we first form a dataset (using sample and replacement) and create a decision tree. Now we run test on this decision using the original dataset. We check the items which were misclassified by current random forest. During sampling the data for the next dataset formation, we should be having higher probability of picking the misclassified items. Now we'll make a decision tree depending on this dataset and add it to the random forest. We'll be doing this step several times to get the final, random forest.
+Note that in this technique, we're trying to make each model learn the weaker points of the training data at each step.
+
+
+Decision Trees vs Neural networks:
+Decision trees work well on tabular (structured) data. Whereas neural networks are recommended for unstructured data (images, audio, text)
+Decision trees are faster to train and predict than neural networks.
+Small decision trees may be human interpretable unlike neural networks.

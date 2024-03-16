@@ -1,0 +1,32 @@
+Supervised learning is a paradigm in machine learning where input objects and a desired output value train a model. The training data is processed, building a function that maps new data on expected output values.
+
+Regression:
+The goal of regression is to predict a continuous numerical value. In other words, it is used when the output variable is a real or floating-point number. It has range of infinitely many outcomes as it predicts a numerical value.
+
+Classification:
+Classification is basically predicting the best suitable class for the given set of input. The class needn't be a number and number of classes are finite, this is the basic difference between regression and classification.
+
+Unsupervised machine learning is a type of machine learning where the algorithm is given data without explicit instructions on what to do with it. Unlike supervised learning, where the algorithm is trained on a labeled dataset with input-output pairs, unsupervised learning deals with unlabeled data. The goal of unsupervised learning is to find patterns, structures, or relationships within the data without being provided with predefined labels or target values. This type of learning is often used for tasks such as clustering, dimensionality reduction, and density estimation.
+
+Linear regression model:
+In this case the model is a linear function (highest degree of the input variable x is 1), ex: f(x) = w1 * x + w2 * x + ... + wn * x + b, here w1, w2, w3 are the various traits of the input and b is the bias. These w1, w2... wn and b are the parameters which are changed over time during training.
+
+Cost function:
+Is basically used to calculate the average or total error of the model with respect to the dataset. Most common cost function is MSE (mean sq error, sum((y_hat - y) ^ 2) / (2 * n), where y-hat is predicted value, and y is the actual value, 2 in the denominator is added by convenction to make it easy which calculating the derivative for minimum).
+The cost function is a function of model parameters, it attains minimum value for some particular values of model parameters. The goal of training is to find those optimal value of the model parameters.
+After every epoch, the derivative of model is calculated w.r.t to each parameter and then it is set to zero, and optimal value of every parameter is calculated at that instant, which becomes updated value of the next epoch.
+
+Difference between cost function and loss function:
+Cost function calculates the total sum of losses accumulated over entire data elements, whereas loss function calculates the loss associated with single data element, for ex: (y_pred - y_true) ^ 2 is the loss function, while sum((y_hat - y) ^ 2) / (2 * n) is the cost function
+
+Optimizers:
+They basically optimize the values of the weights during back propagation, mostly the loss function is differentiated and it's slope is found, if slope is negative means on moving further we'll encounter a lower loss so weight is incremented at that point, if slope is positive it means we'll be increasing the loss on moving forward, so we move backwards in that case.
+
+Gradient descent optimizer:
+It is the most basic optimizer, it's formula involves w = w - lr * (d(lf(w)) / d(w)), (here d(x) represents the partial derivative of x, lf is loss function, and lr is learning rate, and w is weight)
+
+
+Logistic Regression:
+Logistic regression is similar to classification where probability is used to predict a class.
+Classification is a broad term in machine learning that refers to the task of categorizing input data into predefined classes or categories. The goal is to learn a mapping from input features to a set of predefined output classes. There are various algorithms and methods for classification, and logistic regression is one of them.
+Logistic regression is a specific type of regression analysis used for binary classification problems. In binary classification, there are two possible classes or outcomes (e.g., 0 or 1, true or false). Logistic regression models the probability that a given input belongs to a particular class using the logistic function. It is a linear model with a logistic (or sigmoid) activation function applied to the output, which ensures that the predicted probabilities lie between 0 and 1.

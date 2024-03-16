@@ -1,0 +1,16 @@
+Anomaly detection in machine learning is a technique used to identify patterns or instances that deviate significantly from the norm or expected behavior within a dataset. Anomalies, also known as outliers or novelties, are data points that differ significantly from the majority of the data, and detecting them is crucial in various applications such as fraud detection, network security, fault detection, and quality control.
+
+
+In anomaly detection we basically fit the data on lot of negative examples (normal) and very few positive examples (anomalies). We determine a threshold above which we consider anomalies and below which there is no anomalies.
+
+Anomaly detection algorithm:
+Generally the data is in form of Gaussian distribution. It is because by the law of nature everything follows a normal distribution. In case of anomaly detection we tend to classify such examples as anomalies which lie on the outliers of the gaussian curve. 
+First of all we fit our model on a training set which has no anomalies in it. But we change the threshold hyperparameter value according to cross validation set which has both anomalies and normal data. 
+
+Selecting the features for anomaly detection:
+Select the features which follow normal distribution.
+For some features which don't follow normal  distribution, try to convert it into normal distribution by some manipulation, for ex: log(x), root(x)
+Try to engineer some features which follow normal distribution
+
+Advantages of using anomaly detection algorithm over supervised machine learning is that it is good at detecting anomalies which were never encountered before. 
+In case of supervised learning, it needs both positive and negative examples fairly in equivalent amounts to train a good model. But in case of anomalies the data is heavily skewed towards normal data.

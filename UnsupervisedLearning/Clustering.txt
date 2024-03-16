@@ -1,0 +1,11 @@
+K-means Clustering:
+In this clustering, first k points on the data is selected randomly and then assumed to be the centroids of k clusters. Now we assign every point to the nearest centroid. Now we move the centroid from current position to the actual centroid of the current cluster it is assigned to. This step is repeated till we see no change in the points assigned to a cluster.
+
+How does this works?
+Obviously the perfect clustering will happen if the centroids are selected such that sum of the distances form of points from their centroids is minimum.
+Algorithm of K-means clustering slowly moves towards the condition of stability by adjusting the location of the centroids.
+In first step we try to minimize the distances of the points by keeping the centroid fixed and calculating the distances of the points from it. In second we try to place the centroid at more at the actual centroid because sum of squares of the distances of a cluster is optimial at the centroid.
+It can be proved by differentiating this function sum((x[i] - c) ^ 2) w.r.t c, and equating it to 0, where c is centroid and x[i] is a point in the cluster. Now again this is minimizing the distances. In this manner we'll reach a minimia at some point.
+The minimia achieved is not always the global minima, so initial random selection of points highly matter in this case.
+So inorder to make the clustering more accurate, we do this algorithm multiple times, and try to find the more local minimas and select the minimum of all. 
+Generally K random data points are selected rather than K random points (where data might not be present) in usual practice.

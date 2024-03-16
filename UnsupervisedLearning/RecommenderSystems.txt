@@ -1,0 +1,76 @@
+Collaborative filtering is a technique used in recommendation systems to predict a user's preferences or interests by leveraging information from multiple users (or items) in a collaborative manner. The underlying idea is that users who have similar preferences in the past are likely to have similar preferences in the future.
+
+
+Cost function in collaborative filtering:
+
+Let's take a movie recommender system as an example:
+j is a user
+m - number of movies the user has rated
+y(i, j) - rating given by the user j on movie i
+w(j), b(j) - parameters associated with user j
+x(i) = feature vector for movie i
+
+cost function = 1 / (2 * m) * sum(w(j) * x(i) + b(j) - y(i, j)) ^ 2
+
+Here in this cost function we're trying to minimize the cost of for a user according to his ratings. We're trying to make w(j) and b(j) of the user to adjust such that for a movie x(i) it'll give a rating close to y(i, j) after training.
+
+Now this w(j) and b(j) parameters will be used to predict the rating which that user will give to a new type movie. If the predicted rating is high, the movie will be recommended to the user
+
+
+
+What if we have the values of w(j) and b(j) but instead of checking each x(i), we want to recommend an x(i), directly to a user?
+This what is the core of collaborative filtering.
+
+How it's done?
+In this case we, also make x(i) as a learnable parameter. So now we have three parameters learnable x(i), w(j), b(j).
+
+So final cost function is:
+
+J(w, b, x) = 1 / (2 * m) * sum(w(j) * x(i) + b(j) - y(i, j)) ^ 2 + (lambda1 / (2 * m)) * sum(w(j) ^ 2) + (lambda2 / (2 * m)) * sum(x(i) ^ 2)
+
+While modifying the weights using gradient descent we also modify x(i) as:
+x(i) = x(i) - lr * (d J(w, b, x) / d x)
+
+
+
+What if rather than rating (which can take more than 2 values) the problem is about binary classification? ex:- whether the user will click on the link or not, like the post or not etc
+
+This problem is same as turning the above linear regression to logistic regression.
+
+where we instead of doing z = w(j) * x(i) + b(j), 
+we do z = g(w(j) * x(i) + b(j)), where g is a normalization function
+
+L(f(x), y(i, j)) = - y(i, j) * log(f(x)) - (1 - y(i, j)) * log(1 - f(x))
+
+
+What is mean normalization?
+Mean normalization is substracting the rating of every user by the mean of the ratings from all the users.
+This process is helpful while predicting the ratings of a new user. Since a new user has 0 weight and bias value, his prediction for a movie will be w(j) * x(i) + b(j) + mean(i), where mean(i) is the mean of the ratings of the all the users for that movie. Now substibute of the value of w(j) and b(j), we get mean(i) as the predicted rating from the new user which is the most reasonable value.
+More info: https://www.coursera.org/learn/unsupervised-learning-recommenders-reinforcement-learning/lecture/wmHWA/tensorflow-implementation-of-collaborative-filtering
+
+
+
+Content based filtering:
+Content-based filtering is a technique used in recommendation systems to suggest items to users based on the characteristics or features of the items and the preferences of the users. In content-based filtering, the system analyzes the content of items (such as movies, articles, products, etc.) and user preferences to make recommendation.
+
+In this type of filtering, we have information about the users in a vector like [age, gender, country, .....] and information about the features of the items like for movies [action, romance, adventure, thriller, .....]
+
+Since the sizes of the vectors of users and movies can be different, we build a neural network separately for users and for movies.
+The neural network corresponding to the user takes the vector X[u] as input and outputs a vector as output of size m,
+The neural network corresponding to the movie takes the vector X[m] as input and outputs a vector as output of size m.
+
+Cost function is MSE with NN regularization.
+
+These outputs are done dot product to get a scalar which is considered the rating which user will give to that movie.
+If user gives high rating to that movie. Then movies having smaller difference with the current movie will be recommended to the user including this movie.
+|| X[m] - X[m'] || is smaller, where ||.|| is l2 - norm
+This step is called retrieval step:
+In content-based filtering, the retrieval step involves selecting items from the item database that match or are similar to the user's preferences or profile. This step is crucial for generating personalized recommendations based on the content features of items and the user's preferences.
+Retrieval increases system response time, as there is lot of computation involves but improves the quality of recommendation.
+
+
+Principal component analysis:
+Principal Component Analysis (PCA) is a dimensionality reduction technique commonly used in machine learning and statistics. The main goal of PCA is to transform high-dimensional data into a new coordinate system, where the data's variance is maximized along the principal components. By doing this, PCA helps in simplifying the dataset while retaining most of its important information.
+In case of recommendation systems, the size of feature vector is very large so, inorder to make the data visualization easier we do PCA where we try to fit a new coordinate system which fits the data well inorder to reduce the distances of the points from the axes.
+More info:
+https://www.coursera.org/learn/unsupervised-learning-recommenders-reinforcement-learning/lecture/mqAH4/pca-algorithm-optional

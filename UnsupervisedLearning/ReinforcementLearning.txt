@@ -1,0 +1,64 @@
+
+Reinforcement Learning (RL) is a type of machine learning paradigm where an agent learns to make decisions by interacting with an environment. The agent takes actions in the environment, receives feedback in the form of rewards, and learns to optimize its behavior over time. The key components of reinforcement learning include states, actions, policies, rewards, and the environment.
+
+Agent and Environment:
+Agent: The entity that takes actions and learns from its interactions with the environment.
+Environment: The external system with which the agent interacts. It provides feedback to the agent based on its actions.
+
+State (S):
+A state represents a specific situation or configuration of the environment at a given time.
+The state is a crucial concept because the agent's decision-making process depends on its current perception of the environment.
+In some RL problems, the state can be fully observable (Markov Decision Process - MDP), while in others, it may be partially observable.
+
+Action (A):
+An action represents the decision or move that the agent can take in a given state.
+Actions can be discrete or continuous, depending on the problem. For example, in a game, actions might be moving left, right, jumping, etc. In a robotic control task, actions might be continuous motor commands.
+
+Policy (π):
+A policy is a strategy or a mapping from states to actions, representing the agent's behavior.
+It defines the agent's way of deciding what action to take in a given state.
+Policies can be deterministic (always selecting the same action in a given state) or stochastic (selecting actions with certain probabilities).
+
+Reward (R):
+A reward is a scalar feedback signal that the environment provides to the agent after it takes an action in a specific state.
+The goal of the agent is to maximize the cumulative reward over time.
+Rewards can be positive, negative, or zero and are used by the agent to adjust its policy to achieve better long-term outcomes.
+
+Return (G):
+The return is the total accumulated reward obtained by the agent over a sequence of actions in an episode.
+In the context of RL algorithms, a discount factor (usually denoted by γ) is often applied to give less weight to future rewards. The discounted return is the sum of rewards multiplied by the discount factor raised to the power of the time step.
+
+
+Example:-
+Let's assume the example of a autonomous helicopter. In this case helicopter tries to move without human control. If helicopter makes changes to its state, like changing the direction of it's parts to help it turn. It'll receive a reward, if reward is favourable then it'll receive low loss which will help to change it's policy. If it's not favourable then it'll receive very high loss and policy will change such that it'll highly likely not to take the same step in that situation again.
+
+Return is calculated as, G(A) = R1 + r R2 + r ^ 2 * R3 + r ^ 3 * R4....
+Here r is discount factor, it's job is to discount the value of the rewards which are received further in time, here R1, R2, R3 are the rewards associated achieved in chronological order.
+
+
+State-action value function:
+Q(s, a) it gives the return when we take action a at state s, and behave optimally after that.
+So, for a state s we compute max(Q(s, a)) to determine the next step.
+Q(s, a) for every state s is optimized after multiple iterations, like dijkstra
+
+
+Bellman equation:
+Q(s, a) = R(a) + r * max(Q(s', a')), It is basically computing the sum of rewards of moving from s to s' by performing action a, and then taking the optimal of from all the rewards generated after that.
+It is similar to Bellman - ford equation of graph
+
+
+Random (stochastic) environment:
+In case of random environment it doesn't everytime yield the same return by taking the same action a from same state s. In this case we take the mean of the rewards which can be obtained after taking action a from state s. This reward is considered expected reward and the bellman algorithm is applied accordingly. But we need large set of data to calculate the correct mean.
+
+
+Continuous state spaces:
+In last case we defined the states as discrete. In case of continuous the states are continuous, like in case of moving rover. In this case we define the speed, orientation, angles etc as state. For a action we define angle, increment in speed, etc.
+
+For every type of state we make it's pair with every action, and store it in a vector. where parameters of state are on top of action parameters. This vector can be of large size, now we feed this vector to a neural network which outputs Q(s, a), and by comparing it with the actual Q(s, a) we train the model.
+
+A more efficient architecture is giving only states as input and output the Q(s, a) for each possible major action, by making the output layer with number of units as number of actions. So now input is just the vector of state and output is the returns for all possible actions.
+
+
+Exploration & exploitation:
+If a reinforcement learning algorithm is in it's learning stage. We most of the times take the action which yields maximum return (exploitation), but sometimes we also take a random action (exploration) to learn the outcome of that action. Now this depends on the value of r, if r = 0.9, we take best action in 90 % case and explore in 10 % case.
+But in most this value of r is modified, it is taken higher at the start and lowered as the learning progresses.
